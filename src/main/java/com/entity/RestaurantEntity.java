@@ -1,37 +1,36 @@
 package com.entity;
 
-import java.util.List;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "customers")
+@Table(name = "restaurant")
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CustomerEntity 
+public class RestaurantEntity 
 {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Integer customerId;
-	String firstName;
-	String lastName;
+	Integer restaurantId;
+	String title;
+	String category;
+	String description;
+	timings;
+	String address;
+	String contactNum;
+	Float lat;
+	Float log;
+	Integer pincode;
+	String online;
 	String email;
 	String password;
-	String profilePicPath;
-	String otp;
-	String gender;
-	Integer bornYear;
-	String contactNum;
-	
-	@OneToMany(mappedBy = "customer")
-	List<CustomerAdderssEntity> address;
-	
+	String active;
+	String restaurantImagePath;
 }
