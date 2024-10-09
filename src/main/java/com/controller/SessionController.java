@@ -24,6 +24,7 @@ public class SessionController
 	@Autowired
 	RestaurantRepository restaurantRepository;
 	
+	//add customer
 	@PostMapping("/customersignup")
 	public CustomerEntity customerSignup(@RequestBody CustomerEntity customerEntity)
 	{
@@ -32,6 +33,7 @@ public class SessionController
 		return customerEntity;
 	}
 	
+	//add restaurant
 	@PostMapping("/restaurantsignup")
 	public String restaurantSignup(@RequestBody RestaurantEntity restaurantEntity )
 	{
