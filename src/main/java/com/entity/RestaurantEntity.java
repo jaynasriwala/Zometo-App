@@ -22,15 +22,15 @@ public class RestaurantEntity
 	String title;
 	String category;
 	String description;
-	timings;
+	String timings;
 	String address;
 	String contactNum;
 	Float lat;
 	Float log;
 	Integer pincode;
-	String online;
+	Integer online;
 	String email;
 	String password;
-	String active;
+	Integer active;
 	String restaurantImagePath;
 }
