@@ -11,6 +11,7 @@ import com.entity.CustomerEntity;
 import com.entity.RestaurantEntity;
 import com.repository.CustomerRepository;
 import com.repository.RestaurantRepository;
+import com.services.MailerService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -23,6 +24,10 @@ public class SessionController
 	
 	@Autowired
 	RestaurantRepository restaurantRepository;
+	
+	
+	@Autowired
+	MailerService mailerService;
 	
 	//add customer
 	@PostMapping("/customersignup")
@@ -73,6 +78,62 @@ public class SessionController
 			}	
 		}
 		return "login";	
+	}
+	
+	
+	//send otp to customer
+	@GetMapping("sendotpforrecoverpassword/{email}")
+	public String sendOtpForRecoverPassword(@PathVariable("email") String email)
+	{
+		CustomerEntity customerEntity = customerRepository.findByEmail(email);
+		
+		if(customerEntity!=null)
+		{
+			int otp = (int)(Math.random()*1000000);
+			
+			System.out.println("otp:- "+otp);
+			
+			mailerService.sendMailForOtp(email, otp);
+			
+			customerEntity.setOtp(otp);
+			
+			customerRepository.save(customerEntity);
+			
+			return "success";
+		}
+		
+		else {
+			return null;
+		}
+		
+	}
+	
+	//update password
+	@GetMapping("/updatepasswod/{email}/{password}/{otp}")
+	public String updatePassword(@PathVariable("email") String email,@PathVariable("password") String password,@PathVariable("otp") Integer otp)
+	{
+		
+		CustomerEntity customerEntity = customerRepository.findByEmail(email);
+		
+		if(customerEntity == null)
+		{
+			return "invelid";
+		}
+		else
+		{
+			if(otp == -1 || customerEntity.getOtp().intValue() != otp)
+			{
+				return "invelid otp";
+			}
+			else
+			{
+				customerEntity.setPassword(password);
+				customerEntity.setOtp(-1);
+				customerRepository.save(customerEntity);
+				
+				return "password updeted";
+			}
+		}
 	}
 	
 

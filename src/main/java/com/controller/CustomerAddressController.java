@@ -1,7 +1,7 @@
 package com.controller;
 
+
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,18 +30,17 @@ public class CustomerAddressController
 	}
 	
 	//read customerAddress by customer Id
-//	@GetMapping("customeraddress/{customerId}")
-//	public CustomerAdderssEntity getCustomerAddressById(@PathVariable("customerId") Integer customerId) 
-//	{
-//		List<CustomerAdderssEntity> customerAddress = addressRepository.findByCustomerId(customerId);
-//			if(customerAddress.isEmpty()) {
-//				return null;
-//			}
-//			else {
-//				CustomerAdderssEntity customerAddressEntity = customerAddress.get);
-//			    return customerAddressEntity;
-//			}
-//		}
+	@GetMapping("customeraddress/{customerId}")
+	public CustomerAdderssEntity getCustomerAddressById(@PathVariable("customerId") Integer customerId) 
+	{
+		List<CustomerAdderssEntity> customerAddress = addressRepository.findByCustomerCustomerId(customerId);
+			if(customerAddress.isEmpty()) {
+				return null;
+			}
+			else {
+			    return (CustomerAdderssEntity) customerAddress;
+			}
+		}
 	
 	
 	//delete address
