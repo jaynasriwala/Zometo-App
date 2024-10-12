@@ -109,11 +109,16 @@ public class SessionController
 	}
 	
 	//update password
-	@GetMapping("/updatepasswod/{email}/{password}/{otp}")
-	public String updatePassword(@PathVariable("email") String email,@PathVariable("password") String password,@PathVariable("otp") Integer otp)
+	@GetMapping("/updatepasswod/{email}/{password}/{cpassword}/{otp}")
+	public String updatePassword(@PathVariable("email") String email,@PathVariable("password") String password,@PathVariable("cpassword") String cpassword,@PathVariable("otp") Integer otp)
 	{
 		
 		CustomerEntity customerEntity = customerRepository.findByEmail(email);
+		
+		if(! password.equals(cpassword))
+		{
+			return "password and cpassword not same";
+		}
 		
 		if(customerEntity == null)
 		{
