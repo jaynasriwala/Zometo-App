@@ -39,4 +39,7 @@ public class RestaurantEntity
 	
 	@OneToMany(mappedBy = "restaurant")
 	List<MenuEntity> menu;
+	
+	@OneToMany(mappedBy = "restaurant")
+	List<ItemEntity> itemEntity;
 }
