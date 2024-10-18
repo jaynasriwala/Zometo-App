@@ -10,4 +10,6 @@ import com.entity.CustomerAdderssEntity;
 public interface CustomerAddressRepository extends JpaRepository<CustomerAdderssEntity, Integer>{
 
 	List<CustomerAdderssEntity> findByCustomerCustomerId(Integer id);
+
+	CustomerAdderssEntity deleteByCustomerCustomerId(Integer customerId);
 }

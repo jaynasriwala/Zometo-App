@@ -31,6 +31,6 @@ public class MenuEntity
 	@JoinColumn(name="restaurantId")
 	RestaurantEntity restaurant;
 	
-	@OneToMany(mappedBy = "menu")
-	List<ItemEntity> itemEntity;
+	//@OneToMany(mappedBy = "menu")
+	//List<ItemEntity> itemEntity;
 }

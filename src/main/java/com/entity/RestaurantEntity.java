@@ -37,9 +37,9 @@ public class RestaurantEntity
 	Integer active;
 	String restaurantImagePath;
 	
-	@OneToMany(mappedBy = "restaurant")
-	List<MenuEntity> menu;
+	//@OneToMany(mappedBy = "restaurant")
+	//List<MenuEntity> menu;
 	
-	@OneToMany(mappedBy = "restaurant")
-	List<ItemEntity> itemEntity;
+	//@OneToMany(mappedBy = "restaurant")
+	//List<ItemEntity> itemEntity;
 }

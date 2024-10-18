@@ -31,7 +31,7 @@ public class CustomerEntity
 	Integer bornYear;
 	String contactNum;
 	
-	@OneToMany(mappedBy = "customer")
-	List<CustomerAdderssEntity> address;
+	//@OneToMany(mappedBy = "customer")
+	//List<CustomerAdderssEntity> address;
 	
 }
