@@ -1,10 +1,14 @@
 package com.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.entity.CustomerEntity;
@@ -13,9 +17,9 @@ import com.repository.CustomerRepository;
 import com.repository.RestaurantRepository;
 import com.services.MailerService;
 
-import jakarta.servlet.http.HttpSession;
 
 @RestController
+@RequestMapping("/api/public/session")
 public class SessionController 
 {
 	
@@ -25,32 +29,48 @@ public class SessionController
 	@Autowired
 	RestaurantRepository restaurantRepository;
 	
+	@Autowired
+	PasswordEncoder encoder;
 	
 	@Autowired
 	MailerService mailerService;
 	
 	//add customer
 	@PostMapping("/customersignup")
-	public CustomerEntity customerSignup(@RequestBody CustomerEntity customerEntity)
+	public ResponseEntity<?> customerSignup(@RequestBody CustomerEntity customerEntity)
 	{
+		// read plain text password
+		//String plainPassword = customerEntity.getPassword();
+				
+	// encrypt plain text password
+		//String encPassword = encoder.encode(plainPassword);
+		//customerEntity.setPassword(encPassword);
 		
 		customerRepository.save(customerEntity);
-		return customerEntity;
+		return ResponseEntity.status(HttpStatus.CREATED).body(customerEntity);
 	}
 	
 	//add restaurant
 	@PostMapping("/restaurantsignup")
-	public String restaurantSignup(@RequestBody RestaurantEntity restaurantEntity )
+	public ResponseEntity<?> restaurantSignup(@RequestBody RestaurantEntity restaurantEntity )
 	{
+		
+		// read plain text password
+		//String plainPassword = restaurantEntity.getPassword();
+				
+	// encrypt plain text password
+		//String encPassword = encoder.encode(plainPassword);
+		//restaurantEntity.setPassword(encPassword);
+		
 		System.out.println(restaurantEntity.getTitle());
 		restaurantRepository.save(restaurantEntity);
-		return "succes";
+		return ResponseEntity.status(HttpStatus.CREATED).body(restaurantEntity);
 	}
 	
 	
 	//login for customer restaurant
 	@GetMapping("/authentication/{email}/{password}")
-	public String authentication(@PathVariable("email") String email,@PathVariable("password") String password)
+	public ResponseEntity<?> authentication(@PathVariable("email") String email,@PathVariable("password") String password)
 	{
 		
 		CustomerEntity loginCustomer = customerRepository.findByEmail(email);
@@ -58,7 +78,7 @@ public class SessionController
 		
 		if(loginCustomer == null && loginResturent == null)
 		{
-			return "invelid email";
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("invelid mail");
 		}
 		else
 		{
@@ -66,24 +86,24 @@ public class SessionController
 			{
 				if(!(loginCustomer.getPassword().matches(password)))
 				{
-					return "invelid password";
+					return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("invelid password");
 				}
 			}
 			if(loginResturent != null)
 			{
 				if(!(loginResturent.getPassword().matches(password)))
 				{
-					return "invelid password";
+					return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("invelid password");
 				}
 			}	
 		}
-		return "login";	
+		return ResponseEntity.status(HttpStatus.OK).body("login");
 	}
 	
 	
 	//send otp to customer
 	@GetMapping("sendotpforrecoverpassword/{email}")
-	public String sendOtpForRecoverPassword(@PathVariable("email") String email)
+	public ResponseEntity<?> sendOtpForRecoverPassword(@PathVariable("email") String email)
 	{
 		CustomerEntity customerEntity = customerRepository.findByEmail(email);
 		
@@ -99,36 +119,36 @@ public class SessionController
 			
 			customerRepository.save(customerEntity);
 			
-			return "success";
+			return ResponseEntity.status(HttpStatus.OK).body("Opt Send");
 		}
 		
 		else {
-			return null;
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user not found");
 		}
 		
 	}
 	
 	//update password
 	@GetMapping("/updatepasswod/{email}/{password}/{cpassword}/{otp}")
-	public String updatePassword(@PathVariable("email") String email,@PathVariable("password") String password,@PathVariable("cpassword") String cpassword,@PathVariable("otp") Integer otp)
+	public ResponseEntity<?> updatePassword(@PathVariable("email") String email,@PathVariable("password") String password,@PathVariable("cpassword") String cpassword,@PathVariable("otp") Integer otp)
 	{
 		
 		CustomerEntity customerEntity = customerRepository.findByEmail(email);
 		
 		if(! password.equals(cpassword))
 		{
-			return "password and cpassword not same";
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("password and cpassword not same");
 		}
 		
 		if(customerEntity == null)
 		{
-			return "invelid";
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user not found");
 		}
 		else
 		{
 			if(otp == -1 || customerEntity.getOtp().intValue() != otp)
 			{
-				return "invelid otp";
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("invelid otp");
 			}
 			else
 			{
@@ -136,7 +156,7 @@ public class SessionController
 				customerEntity.setOtp(-1);
 				customerRepository.save(customerEntity);
 				
-				return "password updeted";
+				return ResponseEntity.status(HttpStatus.OK).body("password updeted");
 			}
 		}
 	}
