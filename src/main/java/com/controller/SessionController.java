@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Dto.LoginDto;
 import com.entity.CustomerEntity;
 import com.entity.RestaurantEntity;
 import com.repository.CustomerRepository;
@@ -69,12 +70,12 @@ public class SessionController
 	
 	
 	//login for customer restaurant
-	@GetMapping("/authentication/{email}/{password}")
-	public ResponseEntity<?> authentication(@PathVariable("email") String email,@PathVariable("password") String password)
+	@PostMapping("/authentication")
+	public ResponseEntity<?> authentication(@RequestBody LoginDto loginDto)
 	{
 		
-		CustomerEntity loginCustomer = customerRepository.findByEmail(email);
-		RestaurantEntity loginResturent = restaurantRepository.findByEmail(email);
+		CustomerEntity loginCustomer = customerRepository.findByEmail(loginDto.getEmail());
+		RestaurantEntity loginResturent = restaurantRepository.findByEmail(loginDto.getEmail());
 		
 		if(loginCustomer == null && loginResturent == null)
 		{
@@ -84,14 +85,14 @@ public class SessionController
 		{
 			if(loginCustomer != null)
 			{
-				if(!(loginCustomer.getPassword().matches(password)))
+				if(!(loginCustomer.getPassword().matches(loginDto.getPassword())))
 				{
 					return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("invelid password");
 				}
 			}
 			if(loginResturent != null)
 			{
-				if(!(loginResturent.getPassword().matches(password)))
+				if(!(loginResturent.getPassword().matches(loginDto.getPassword())))
 				{
 					return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("invelid password");
 				}
