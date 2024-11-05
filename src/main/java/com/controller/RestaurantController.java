@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,14 +29,21 @@ public class RestaurantController
 	
 	// Read All Restaurant
 		@GetMapping("/allrestaurants")
-		public ResponseEntity<?> getAllRestaurants() {
+		public ResponseEntity<?> getAllRestaurants() 
+		{
 			List<RestaurantEntity> restaurants = restaurantRepository.findAll();
+			
 			if(restaurants.isEmpty()) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Record not found");
 			}else {
 				return ResponseEntity.status(HttpStatus.OK).body(restaurants);
 			}
 		}
+		
+		@GetMapping("/nearest-restaurants/{lat}/{log}")
+	    public List<RestaurantEntity> getNearestRestaurants(@PathVariable("lat") double latitude,@PathVariable("log") double longitude) {
+	        return restaurantRepository.findNearestRestaurants(latitude, longitude,PageRequest.of(0, 5));
+	    }
 		
 		// Read Restaurant by Id
 			@GetMapping("/restaurants/{restaurantId}")
