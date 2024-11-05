@@ -1,8 +1,5 @@
 package com.entity;
 
-
-
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,22 +12,25 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name="menus")
 @Data
+@Table(name = "carts")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MenuEntity 
+public class CartEntity 
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Integer menuId;
-	Integer active;
-	String title;
-	String menuImagePath;
-
-	@ManyToOne
-	@JoinColumn(name="restaurantId")
-	RestaurantEntity restaurant;
+	Integer	cartId;//	PK
 	
-	//@OneToMany(mappedBy = "menu")
-	//List<ItemEntity> itemEntity;
+	//Many carts can belong to one customer
+	@ManyToOne
+	@JoinColumn(name = "customerId")
+	CustomerEntity customerEntity;
+	
+	//Each cart is associated with one restaurant
+	@ManyToOne
+	@JoinColumn(name = "restaurantId")
+	RestaurantEntity restaurantEntity;
+	
+	Integer offerAmount;
+	Integer totalQty;
 }
